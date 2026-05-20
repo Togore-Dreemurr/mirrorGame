@@ -8,10 +8,18 @@ export class Game extends Phaser.Scene {
         this.load.spritesheet('mirrorSide', 'assets/mirror.png', {frameWidth:200,frameHeight:300});
         this.load.spritesheet('player','assets/player.png',{frameWidth:22,frameHeight:23});
         this.load.spritesheet('mirrorPlayer','assets/mirrorPlayer.png',{frameWidth: 22, frameHeight: 23});
+        this.load.image('whitePlatform','assets/whitePlatform.png');
+        this.load.image('blackPlatform','assets/blackPlatform.png');
     }
 
     create() {
         this.add.sprite(300,150,'mirrorSide');
+
+        const whitePlatform = this.physics.add.staticGroup();
+        whitePlatform.create(100,150,'whitePlatform').setScale(30).refreshBody();
+        const blackPlatform = this.physics.add.staticGroup();
+        blackPlatform.create(300,150,'blackPlatform').setScale(30).refreshBody();
+
         const {LEFT,RIGHT,UP,DOWN,W,A,S,D} = Phaser.Input.Keyboard.KeyCodes;
         this.keys = this.input.keyboard.addKeys({
             left: LEFT,
@@ -112,6 +120,9 @@ export class Game extends Phaser.Scene {
         }
         this.player.setFrame(this.idleFrame.down);
         this.mirrorPlayer.setFrame(this.idleFrame.down);
+
+        this.physics.add.collider(this.player, whitePlatform);
+        this.physics.add.collider(this.mirrorPlayer, blackPlatform);
     }
 
     update() {
